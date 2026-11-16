@@ -1,0 +1,1 @@
+# Projet fil rouge - Retail Intelligence Platform (IPSSI)
