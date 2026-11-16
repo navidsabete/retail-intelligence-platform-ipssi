@@ -1,0 +1,37 @@
+﻿fichier;extension;taille_octets;nombre_lignes;nombre_colonnes;separateur;entete_suppose;statut
+data/customer/customer.dat;.dat;13279063;99000;18;|;NON;OK
+data/customer_address/customer_address.dat;.dat;5387229;49500;13;|;NON;OK
+data/customer_demographics/customer_demographics.dat;.dat;77753083;1920800;9;|;NON;OK
+data/date_dim/date_dim.dat;.dat;15395800;109573;28;|;NON;OK
+data/household_demographics/household_demographics.dat;.dat;155100;7200;5;|;NON;OK
+data/income_band/income_band.dat;.dat;327;20;3;|;NON;OK
+data/inventory/inventory.dat;.dat;424943678;23255100;4;|;NON;OK
+data/item/item.dat;.dat;6799286;17820;22;|;NON;OK
+data/item_marketprices/item_marketprices.dat;.dat;4201170;89100;6;|;NON;OK
+data/item_marketprices/item_marketprices_audit.csv;.csv;273;4;0;,;OUI;A VERIFIER
+data/product_reviews/product_reviews.dat;.dat;56355389;89601;8;|;NON;OK
+data/promotion/promotion.dat;.dat;46396;300;19;|;NON;OK
+data/reason/reason.dat;.dat;3105;35;3;|;NON;OK
+data/ship_mode/ship_mode.dat;.dat;1220;20;6;|;NON;OK
+data/store/store.dat;.dat;3386;12;29;|;NON;OK
+data/store_returns/store_returns.dat;.dat;4337400;37902;20;|;NON;OK
+data/store_sales/store_sales.dat;.dat;92764700;667579;23;|;NON;OK
+data/time_dim/time_dim.dat;.dat;5107780;86400;10;|;NON;OK
+data/warehouse/warehouse.dat;.dat;584;5;14;|;NON;OK
+data/web_clickstreams/web_clickstreams.dat;.dat;178722140;6770550;6;|;NON;OK
+data/web_page/web_page.dat;.dat;8040;60;14;|;NON;OK
+data/web_returns/web_returns.dat;.dat;5383513;38487;24;|;NON;OK
+data/web_sales/web_sales.dat;.dat;133790574;668052;34;|;NON;OK
+data/web_site/web_site.dat;.dat;8838;30;26;|;NON;OK
+data_refresh/customer/customer.dat;.dat;134360;1000;18;|;NON;OK
+data_refresh/customer_address/customer_address.dat;.dat;54587;500;13;|;NON;OK
+data_refresh/inventory/inventory.dat;.dat;4292915;234900;4;|;NON;OK
+data_refresh/item/item.dat;.dat;69173;180;22;|;NON;OK
+data_refresh/item_marketprices/item_marketprices.dat;.dat;42547;900;6;|;NON;OK
+data_refresh/item_marketprices/item_marketprices_audit.csv;.csv;151009;17985;0;,;OUI;A VERIFIER
+data_refresh/product_reviews/product_reviews.dat;.dat;573685;907;8;|;NON;OK
+data_refresh/store_returns/store_returns.dat;.dat;48825;426;20;|;NON;OK
+data_refresh/store_sales/store_sales.dat;.dat;922171;6632;23;|;NON;OK
+data_refresh/web_clickstreams/web_clickstreams.dat;.dat;1821864;68988;6;|;NON;OK
+data_refresh/web_returns/web_returns.dat;.dat;55952;400;24;|;NON;OK
+data_refresh/web_sales/web_sales.dat;.dat;1378425;6879;34;|;NON;OK
