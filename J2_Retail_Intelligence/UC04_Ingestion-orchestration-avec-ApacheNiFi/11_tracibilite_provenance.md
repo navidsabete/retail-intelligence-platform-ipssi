@@ -14,3 +14,5 @@ Les événements observés sont les suivants :
 La taille du FlowFile est de 12,66 MB pour les deux événements. Le même identifiant UUID permet d'établir le lien entre la lecture locale et l'envoi vers HDFS.
 
 Ces informations permettent de reconstituer le parcours du fichier, d'identifier les composants traversés, de connaître les horaires de traitement et de suivre un FlowFile de manière individuelle.
+
+**Preuve :** `07_provenance_tracabilite.png`

@@ -91,5 +91,3 @@ Cette observation confirme que la racine `/retail-lake` et ses six sous-réperto
 L'environnement repose sur Ubuntu 24.04.5 LTS, OpenJDK 21.0.13.0.3, Hadoop 3.5.0 et Python 3.12.3. NiFi est installé sous `/opt/nifi` et son statut est `UP` (HTTP 200). Hadoop est installé sous `/opt/hadoop` et les processus NameNode, DataNode et SecondaryNameNode sont actifs.
 
 HDFS est accessible, avec un seul DataNode local (`localhost`). Il s'agit donc d'un environnement mono-nœud adapté à l'apprentissage et aux tests, mais qui ne fournit pas la haute disponibilité d'un cluster de production. La racine `/retail-lake` contient déjà les répertoires `bronze`, `gold`, `logs`, `quality`, `raw` et `silver`.
-
-**Informations restantes à compléter :** version exacte de NiFi, chemins de configuration Hadoop, paramètres HDFS, ressources matérielles et contraintes réseau / permissions.
