@@ -6,8 +6,6 @@
 **Répertoire vérifié :** `/retail-lake/raw/tpcxbb/initial/`  
 **Date des contrôles :** 17 novembre 2026
 
----
-
 ## 1. Objectif
 
 Cette étape vise à vérifier que les fichiers TPCX-BB déposés lors de l'étape 4 sont correctement stockés dans HDFS, accessibles et conformes aux fichiers sources locaux.

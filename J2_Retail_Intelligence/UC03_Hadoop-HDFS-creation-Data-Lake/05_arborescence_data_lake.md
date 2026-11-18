@@ -5,8 +5,6 @@
 **Technologie de stockage :** HDFS  
 **Racine du Data Lake :** `/retail-lake`
 
----
-
 ## 1. Objectif
 
 Cette étape consiste à organiser le Data Lake dans HDFS afin de séparer clairement les données sources, les données préparées pour les traitements, les données analytiques, les contrôles qualité et les journaux techniques.

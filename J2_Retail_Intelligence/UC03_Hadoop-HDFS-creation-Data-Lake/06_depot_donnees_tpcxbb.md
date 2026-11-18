@@ -7,7 +7,6 @@
 **Lot :** Initial  
 **Date des vérifications HDFS :** 17 novembre 2026
 
----
 
 ## 1. Objectif
 
