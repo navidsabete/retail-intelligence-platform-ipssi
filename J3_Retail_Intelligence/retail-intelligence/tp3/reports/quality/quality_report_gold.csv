@@ -1,0 +1,46 @@
+controle;regle;resultat;statut;details
+Volume;Le nombre de lignes doit être égal à 12;12;PASS;Une ligne est attendue par magasin.
+Structure;Toutes les colonnes indispensables doivent être présentes;Aucune colonne manquante;PASS;
+Complétude;store_sk ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;revenue_rank ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;is_best_revenue_store ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;total_revenue_inc_tax ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;global_revenue_inc_tax ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;revenue_share_pct ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;total_net_paid ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;total_net_profit ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;total_quantity_sold ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;number_of_sales_lines ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Complétude;number_of_tickets ne doit pas contenir de valeur nulle;0 valeur(s) nulle(s);PASS;
+Validité des types;store_sk doit être de type LongType;bigint;PASS;
+Validité des types;revenue_rank doit être de type IntegerType;int;PASS;
+Validité des types;is_best_revenue_store doit être de type BooleanType;boolean;PASS;
+Validité des types;total_revenue_inc_tax doit être de type DecimalType;decimal(17,2);PASS;
+Validité des types;global_revenue_inc_tax doit être de type DecimalType;decimal(27,2);PASS;
+Validité des types;revenue_share_pct doit être de type DoubleType;double;PASS;
+Validité des types;total_net_paid doit être de type DecimalType;decimal(17,2);PASS;
+Validité des types;total_net_profit doit être de type DecimalType;decimal(17,2);PASS;
+Validité des types;total_quantity_sold doit être de type LongType;bigint;PASS;
+Validité des types;number_of_sales_lines doit être de type LongType;bigint;PASS;
+Validité des types;number_of_tickets doit être de type LongType;bigint;PASS;
+Unicité;store_sk doit identifier un seul enregistrement;0 doublon(s);PASS;Clé candidate du jeu Gold.
+Clé candidate;store_sk ne doit pas être nul;Contrôle effectué;PASS;
+Cohérence;Le rang doit être compris entre 1 et le nombre de magasins;0 rang(s) invalide(s);PASS;
+Cohérence;Chaque magasin doit avoir un rang distinct;12 rang(s) distinct(s) pour 12 lignes;PASS;À adapter si des ex aequo doivent partager un rang.
+Cohérence;Un seul magasin doit être identifié comme meilleur CA;1 magasin(s) identifié(s);PASS;
+Cohérence;Le booléen du meilleur magasin doit correspondre au rang 1;0 incohérence(s);PASS;
+Cohérence;Le chiffre d'affaires TTC ne doit pas être négatif;0 valeur(s) négative(s);PASS;Règle métier à confirmer si des écritures correctives ou retours peuvent produire des montants négatifs.
+Cohérence;La part de chiffre d'affaires doit être comprise entre 0 et 100;0 valeur(s) hors domaine;PASS;
+Cohérence;Le total global doit être identique sur chaque ligne et égal à la somme des CA magasins;"Somme CA=1202218083.00 ; total global min=1202218083.00 ; max=1202218083.00";PASS;
+Cohérence;La somme des parts de chiffre d'affaires doit être proche de 100 %;99.99999999999999 %;PASS;Tolérance de 0,1 point pour les arrondis et les flottants.
+Cohérence;La part de CA doit correspondre au CA magasin / CA global;0 ligne(s) incohérente(s);PASS;Tolérance de 0,1 point.
+Réconciliation;Le nombre de magasins doit être identique entre source et Gold;"Source=12 ; Gold=12";PASS;
+Clés candidates;Les magasins doivent être identiques entre Silver transformé et Gold;"Absents du Gold=0 ; absents de la source=0";PASS;
+Réconciliation;La somme de total_revenue_inc_tax doit être conservée;"Source=1202218083.00 ; Gold=1202218083.00";PASS;
+Réconciliation;La somme de total_net_paid doit être conservée;"Source=1150529586.37 ; Gold=1150529586.37";PASS;
+Réconciliation;La somme de total_net_profit doit être conservée;"Source=-552553374.82 ; Gold=-552553374.82";PASS;
+Réconciliation;La somme de total_quantity_sold doit être conservée;"Source=33755474 ; Gold=33755474";PASS;
+Réconciliation;La somme de number_of_sales_lines doit être conservée;"Source=667579 ; Gold=667579";PASS;
+Réconciliation;La somme de number_of_tickets doit être conservée;"Source=89100 ; Gold=89100";PASS;
+Réconciliation;Les six mesures doivent être identiques par magasin;0 ligne(s) différente(s);PASS;
+Intégrité référentielle;Vérifier store_sk dans les ventes Silver;Colonne store_sk absente;WARN;
