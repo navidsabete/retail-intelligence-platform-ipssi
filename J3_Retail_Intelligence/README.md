@@ -537,3 +537,131 @@ Après la mise en place du stockage et des mécanismes d'ingestion lors du J2, l
 La séparation entre Bronze, Silver et Gold facilite la compréhension des traitements, la traçabilité des données et la réutilisation des jeux produits.
 
 La couche Gold fournit une première vue analytique des performances commerciales par magasin, les contrôles qualité permettent de vérifier la cohérence des résultats obtenus.
+
+
+
+
+## Questions de recul
+
+### 1. Pourquoi est-il nécessaire de vérifier les schémas avant de commencer les transformations ?
+
+La vérification des schémas permet de connaître précisément la structure des données avant de les exploiter : noms des colonnes, types, formats et éventuelles valeurs nulles.
+
+Cette étape évite notamment les erreurs de traitement liées à des types incorrects, à des colonnes manquantes ou à une mauvaise interprétation des champs. Elle permet également de définir des règles de nettoyage et de transformation adaptées aux données réellement disponibles.
+
+Dans ce projet, l'exploration des fichiers TPCx-BB a notamment permis d'identifier les colonnes des tables `store_sales` et `inventory`, ainsi que leurs types, avant leur traitement avec PySpark.
+
+### 2. Quelle différence existe entre une donnée brute, une donnée Silver et une donnée Gold ?
+
+Ces trois niveaux correspondent à des étapes différentes de préparation et de valorisation des données.
+
+- **Bronze (donnée brute)** : contient les données récupérées depuis les sources, avec un minimum de modifications. L'objectif est de conserver les données d'origine pour pouvoir les retrouver et les retraiter.
+- **Silver (donnée nettoyée et structurée)** : contient des données dont la structure a été contrôlée et qui ont subi des traitements de nettoyage, de typage et de validation. Les anomalies peuvent être identifiées et, selon les règles définies, certaines lignes peuvent être mises en quarantaine.
+- **Gold (donnée métier)** : contient des données transformées et agrégées pour répondre à des besoins d'analyse et faciliter leur exploitation. Elles sont organisées selon une granularité et des indicateurs définis.
+
+Dans le projet, la couche Gold `sales_performance_by_store` permet notamment de comparer les performances des magasins à partir du chiffre d'affaires, du classement et de la part de chiffre d'affaires de chaque magasin.
+
+### 3. Pourquoi faut-il connaître la granularité d’une table avant de réaliser une agrégation ?
+
+La granularité correspond au niveau de détail représenté par une ligne d'une table. Il est indispensable de la connaître pour choisir correctement les clés de regroupement et éviter les agrégations incorrectes.
+
+Une mauvaise compréhension de la granularité peut entraîner des doublons, des comptages erronés ou une multiplication artificielle des montants.
+
+Dans ce projet, les jeux de données transformés ne possèdent pas tous la même granularité : `sales_by_store` contient une ligne par magasin, tandis que `sales_by_store_date` contient une ligne par magasin et par date. Cette distinction est essentielle pour calculer correctement les indicateurs.
+
+### 4. Quels risques présente une jointure réalisée sur une clé supposée ?
+
+Une jointure réalisée sur une clé dont l'unicité ou la signification n'a pas été vérifiée peut produire plusieurs problèmes :
+
+- multiplication du nombre de lignes lorsque plusieurs correspondances existent
+- perte de lignes lorsqu'aucune correspondance n'est trouvée avec une jointure interne
+- association de données qui ne correspondent pas réellement au même élément métier
+- calculs et indicateurs faussés à la suite de ces associations incorrectes.
+
+Il est donc nécessaire de vérifier les clés utilisées, leur unicité, les valeurs nulles et le nombre de correspondances avant et après la jointure.
+
+Dans le projet, la jointure entre les ventes et les stocks a conservé les 565 428 lignes de ventes. Aucune multiplication de lignes n'a été constatée, mais seulement 80 727 lignes ont trouvé une correspondance, soit environ 14,28 %. Ce résultat montre qu'une jointure techniquement correcte ne garantit pas que toutes les données possèdent une correspondance métier.
+
+### 5. Pourquoi ne faut-il pas supprimer automatiquement les valeurs atypiques ?
+
+Une valeur atypique n'est pas nécessairement une erreur. Elle peut correspondre à une situation réelle, à une opération exceptionnelle, à un retour ou à une particularité du fonctionnement métier.
+
+La supprimer automatiquement peut entraîner une perte d'information et modifier les résultats des analyses, notamment les sommes, les moyennes et les indicateurs de performance.
+
+Il est donc préférable d'identifier ces valeurs, de les documenter et de comprendre leur origine avant de décider d'une éventuelle correction ou exclusion.
+
+Dans ce projet, certaines valeurs négatives de profit ou certaines valeurs nulles de prix et de montants ont été signalées comme anomalies potentielles, sans être automatiquement supprimées. Leur interprétation nécessite des règles métier complémentaires.
+
+### 6. Quels contrôles permettent de vérifier la cohérence d’un jeu de données transformé ?
+
+Plusieurs contrôles complémentaires permettent de vérifier la qualité et la cohérence d'un jeu de données :
+
+- **Contrôle du volume** : vérifier le nombre de lignes attendu après transformation.
+- **Contrôle du schéma** : vérifier la présence des colonnes et la conformité de leurs types.
+- **Contrôle de complétude** : identifier les valeurs nulles dans les champs importants.
+- **Contrôle d'unicité** : vérifier l'absence de doublons sur les clés définies.
+- **Contrôle des valeurs** : vérifier les plages autorisées et les règles de cohérence métier.
+- **Contrôle des agrégations** : comparer les totaux avant et après transformation.
+- **Contrôle des jointures** : vérifier le nombre de lignes, les correspondances et les éventuelles multiplications.
+- **Contrôle de persistance** : relire les données enregistrées et vérifier qu'elles correspondent aux données attendues.
+
+Pour la couche Gold du projet, les contrôles ont notamment permis d'obtenir 44 tests réussis, aucun échec et un avertissement. Cet avertissement concerne l'impossibilité de vérifier l'intégrité référentielle de `store_sk` avec la source disponible, car la colonne nécessaire n'était pas présente dans le jeu de données utilisé pour ce contrôle.
+
+### 7. Pourquoi Parquet est-il adapté aux usages analytiques ?
+
+Parquet est un format de stockage en colonnes particulièrement adapté aux traitements analytiques.
+
+Contrairement à un format organisé principalement en lignes, il permet de lire uniquement les colonnes nécessaires à une requête. Cela peut réduire les volumes de données lus et améliorer les performances lorsque les traitements portent sur un sous-ensemble de colonnes.
+
+Parquet prend également en charge la compression et conserve les types des données dans son schéma. Il est ainsi adapté aux traitements distribués avec Apache Spark et aux architectures Data Lake.
+
+Dans ce projet, les données des couches Silver et Gold sont stockées au format Parquet. La couche Gold utilise également la compression Snappy.
+
+### 8. Pourquoi Parquet seul ne fournit-il pas les garanties d’une table transactionnelle Lakehouse ?
+
+Parquet est un format de fichiers : il définit la manière dont les données sont organisées et stockées. En revanche, il ne fournit pas à lui seul les mécanismes nécessaires à la gestion transactionnelle d'une table.
+
+Il ne garantit notamment pas nativement :
+- les transactions ACID 
+- la gestion des écritures concurrentes 
+- le contrôle des modifications et des versions 
+- la gestion cohérente des mises à jour et suppressions 
+- la possibilité de revenir à un état précédent de la table
+
+Une architecture Lakehouse peut donc utiliser Parquet comme format de stockage tout en s'appuyant sur une couche supplémentaire, comme Delta Lake, Apache Iceberg ou Apache Hudi, pour apporter ces fonctionnalités.
+
+Ainsi, utiliser Parquet dans le projet permet de stocker efficacement les données analytiques, mais ne suffit pas à mettre en place une gestion transactionnelle complète.
+
+### 9. Dans quels cas une base NoSQL pourrait-elle compléter une architecture Data Lake ?
+
+Une base NoSQL peut compléter un Data Lake lorsque l'application nécessite des accès rapides, des structures de données flexibles ou une gestion de données qui ne se prête pas facilement à un modèle relationnel classique.
+
+Elle peut notamment être pertinente pour :
+- stocker des données semi-structurées ou très variables
+- gérer des événements et des données générées en continu
+- répondre à des requêtes opérationnelles à faible latence 
+- gérer des volumes importants avec des besoins de distribution et de scalabilité 
+- fournir un accès rapide à des données utilisées par une application
+
+Dans une architecture globale, le Data Lake peut conserver les données historiques et alimenter les traitements analytiques, tandis que la base NoSQL peut servir les besoins opérationnels de certaines applications.
+
+Ces deux composants ont donc des rôles complémentaires et ne répondent pas exactement aux mêmes besoins.
+
+### 10. Quelles limites des données TPCx-BB doivent être prises en compte lors de l’interprétation des résultats ?
+
+Les données TPCx-BB utilisées dans ce projet constituent un jeu de données synthétique destiné à représenter un contexte de distribution. Elles permettent de travailler sur des volumes importants et de mettre en œuvre des traitements de données, mais elles ne doivent pas être considérées comme une représentation exacte d'une activité commerciale réelle.
+
+Plusieurs limites doivent être prises en compte :
+
+- **Données synthétiques** : les résultats ne décrivent pas nécessairement le comportement de véritables magasins ou clients.
+- **Contexte métier limité** : certaines règles métier ne sont pas disponibles ou ne peuvent pas être déduites uniquement des données.
+- **Valeurs atypiques** : des valeurs nulles, négatives ou inhabituelles peuvent nécessiter une interprétation avant toute correction.
+- **Relations entre tables** : une clé présente dans plusieurs jeux de données ne garantit pas automatiquement une correspondance métier complète.
+- **Périmètre des données** : les indicateurs calculés dépendent des tables, des colonnes et des périodes effectivement disponibles.
+- **Interprétation des indicateurs** : un chiffre d'affaires, un montant net payé ou un profit calculé ne doit pas être interprété sans connaître précisément sa définition métier.
+
+Par exemple, la couche Gold fait ressortir le magasin 7 comme premier magasin en chiffre d'affaires, avec environ 103,38 millions, soit 8,60 % du chiffre d'affaires global. Ce résultat est valable dans le périmètre des données traitées, mais ne permet pas à lui seul de conclure qu'il s'agit du magasin le plus performant dans une situation commerciale réelle.
+
+De même, les profits nets agrégés négatifs observés doivent être interprétés avec prudence : sans définition métier complémentaire, il n'est pas possible de déterminer s'ils traduisent une anomalie, une particularité du jeu synthétique ou une règle de calcul spécifique.
+
+Ces limites rappellent que la qualité technique des traitements ne suffit pas à garantir la pertinence métier des conclusions. L'interprétation des résultats doit toujours tenir compte de la provenance, de la structure et du contexte des données.
