@@ -65,6 +65,7 @@ J3_Retail_Intelligence/
 ```
 
 Les dossiers `data/` regroupent les différentes couches de données produites pendant les traitements. Les dossiers `notebooks/` et `scripts/` accueillent les éléments de manipulation, de transformation et de contrôle. Le dossier `reports/quality/` conserve les rapports de validation.
+Les dossiers `data/` ne sont pas **committées sur Git** car les données dépendent du contexte métier. Vous choisissez les fichiers de données correspondant à vos besoins.
 
 ## Périmètre technique
 
